@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: redis-pod
+  name: redis-pod
+spec:
+  containers:
+  - command:
+    - redis-server
+    - /redis-master/redis.conf
+    image: redis:7
+    name: redis-pod
+    ports:
+    - containerPort: 6379
+    volumeMounts:
+      - name: redis-config
+        mountPath: /redis-master
+      - name: redis-data
+        mountPath: /redis-data
+      - name: redis-config-map
+        mountPath: /configmap
+        readOnly: true 
+  volumes:
+    - name: redis-config
+      emptyDir: {}
+    - name: redis-data
+      emptyDir: {}
+    - name: redis-config-map
+      configMap:
+        name: redis-config
